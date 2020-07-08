@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+
+OPUS() {
+	for ext ; do
+		find . -name "*.$ext" -exec sh -c \
+			'ffmpeg -i "{}" -y -c:a \
+			libopus -b:a 128k "${0%.*}.opus" && \
+			rm "$0"' {} \;
+	done
+}
+
+MP3() {
+	for ext ; do
+		find . -name "*.$ext" -exec sh -c \
+			'ffmpeg -i "{}" -y -c:a \
+			libmp3lame -b:a 320k "${0%.*}.mp3" && \
+			rm "$0"' {} \;
+	done
+}
+
+MP4() {
+	for ext ; do
+		find . -name "*.$ext" -exec sh -c \
+			'ffmpeg -i "{}" -c:v libx264 \
+			-crf 19 -preset slow -c:a aac \
+			-b:a 192k -ac 2 "${0%.*}.mp4" && \
+			rm "$0"' {} \;
+	done
+}
+
+case "$1" in
+	opus) OPUS ogg aac flac mp3 wav m4a  ;;
+	mp3)  MP3 ogg aac flac opus wav m4a  ;;
+	mp4)  MP4 wmv webm mkv avi flv       ;;
+	*)    printf 'error\n' && exit 1     ;;
+esac
+
+printf "\nAll files have been converted to ${1}!\n"

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Neovim
+Comment=Edit text files
+Icon=nvim
+Terminal=true
+Exec=urxvt -e /usr/bin/nvim %f
+Categories=Utility;TextEditor;
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-tex;text/x-shellscript;text/x-c;text/x-c++;text/x-matlab;application/x-shellscript;

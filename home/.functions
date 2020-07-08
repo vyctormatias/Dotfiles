@@ -1,0 +1,355 @@
+################################
+# Aliases
+################################
+
+alias ls='exa'
+alias clone='git clone'
+alias sudo='sudo '
+alias su='su -p'
+alias e='$EDITOR'
+alias c='clear'
+alias dw='du -chs *'
+alias rm='rm -vfr'
+alias cp='cp -R'
+alias grep='grep --color=auto'
+alias x='chmod +x'
+alias con='ps -A --sort -rsz -o comm,pmem,pcpu|awk "NR<=15"'
+alias cdd='cd ~/Downloads'
+alias kp='kpcli --no-recycle --kdb Documents/Notes/NewDatabase.kdbx'
+alias open='xdg-open'
+alias sf='xdg-open $(fzf --height 50% --reverse) 1>/dev/null'
+alias lip='ip -f inet -o addr show enp2s0 | grep --color=never -oP "(?<=inet )[0-9.]+"'
+alias load='xrdb -load ~/.Xresources'
+alias differ='git diff --color-words'
+alias disks='echo "╓───── m o u n t . p o i n t s"; echo "╙────────────────────────────────────── ─ ─ "; lsblk -a; echo ""; echo "╓───── d i s k . u s a g e"; echo "╙────────────────────────────────────── ─ ─ "; df -h;'
+
+
+################################
+#  Upload files
+################################
+
+# hosts list
+host-list() {
+	printf "TEXT:\nix\nsprunge\niotek\nptpb\n\nFILES:\nuguu\
+	\ntransfer\nanonfile\ncatbox\n0x0\nfiery\n"
+}
+
+## text
+### ix, quick and simple
+ix() {
+	finalResult="$(if [ $# -lt 2 ]; then
+			cat "$@"
+		else
+		for f; do
+			echo "## $f"
+			cat "$f"
+			done
+	fi | curl -sF 'f:1=<-' ix.io)"
+	printf "$finalResult" | xclip -selection clipboard
+	dunstify "Uploaded!" "${finalResult}"
+}
+
+### sprunge
+sprunge() {
+	finalResult="$(if [ $# -lt 2 ]; then
+			cat "$@"
+		else
+		for f; do
+			echo "## $f"
+			cat "$f"
+			echo
+		done
+	fi | curl -sF 'sprunge=<-' http://sprunge.us | tr -d ' ')"
+	printf "$finalResult" | xclip -selection clipboard
+	dunstify "Uploaded!" "${finalResult}"
+}
+
+### iotek
+iotek() {
+    for i in "$@"; do
+        finalResult="$(curl -sT- https://p.iotek.org < $i)"
+        printf "$finalResult" | xclip -selection clipboard
+        dunstify "Uploaded!" "${finalResult}"
+    done
+}
+
+## files
+### uguu - 24 hours
+uguu() {
+    for i in "$@"; do
+        finalResult="$(curl -i -F file=@$i https://uguu.se/api.php?d=upload-tool | grep https)"
+        printf "$finalResult" | xclip -selection clipboard
+        dunstify "Uploaded!" "${finalResult}"
+    done
+}
+
+### transfer
+transfer() {
+    for i in "$@"; do
+        finalResult="$(curl -sS -T $i https://transfer.sh/)"
+        printf "$finalResult" | xclip -selection clipboard
+        dunstify "Uploaded!" "${finalResult}"
+    done
+}
+
+### anonfile
+anon() {
+    for i in "$@"; do
+    	finalResult="$(curl -F "file=@$i" https://anonfile.com/api/upload)"
+		printf "$finalResult" | sed 's/.*short":"//;s/"}.*//' | xclip -selection clipboard
+		dunstify "Uploaded!" "$(printf "$finalResult" | sed 's/.*short":"//;s/"}.*//')"
+    done
+}
+
+### catbox
+catbox() {
+    for i in "$@"; do
+        finalResult="$(curl -F "reqtype=fileupload" -F "fileToUpload=@$i" https://catbox.moe/user/api.php)"
+        printf "$finalResult" | xclip -selection clipboard
+        dunstify "Uploaded!" "${finalResult}"
+    done
+}
+
+### 0x0
+0x0() {
+	for i in "$@"; do
+		finalResult="$(curl -sf -F file="@$i" https://0x0.st/)"
+		printf "$finalResult" | xclip -selection clipboard
+		dunstify "Uploaded!" "${finalResult}"
+	done
+}
+
+### fiery
+fiery() {
+	for i in "$@"; do
+		finalResult="$(curl -sf -F files[]="@$i" https://safe.fiery.me/api/upload)"
+		finalResult="$(echo "${finalResult}" | grep -Po '"url":"[A-Za-z0-9]+.*?"' | sed 's/"url":"//;s/"//')"
+		printf "$finalResult" | xclip -selection clipboard
+		dunstify "Uploaded!" "${finalResult}"
+	done
+}
+
+
+####################################
+# Compacting and extracting
+####################################
+
+# Extract a folder
+
+extract() {
+if [[ -f $1 ]]; then
+	case "$1" in
+		*.tar.bz2) tar xvjf "$1";;
+		*.tar.gz) tar xvzf "$1";;
+		*.tar.xz) tar xvf "$1";;
+		*.tar) tar xvf "$1";;
+		*.tgz) tar xvf "$1";;
+		*.xz) tar xvf "$1";;
+		*.gz) gunzip "$1";;
+		*.zip) unzip "$1";;
+		*.rar) unrar x "$1";;
+		*.bz2) bzip2 -d "$1" ;;
+		*.lzma) unlzma "$1" ;;
+		*.Z) uncompress "$1" ;;
+		*.7z) 7z x "$1" ;;
+		*.deb) ar x ./"$1" ;;
+		*) echo "'$1' cannot be extracted via extract."
+	esac
+else
+	echo "'$1' is not a valid file"
+fi
+}
+
+# Compress a file
+
+compress() {
+	if [[ -n "$1" ]]; then
+		FILE=$1
+		case $FILE in
+			*.tar ) shift && tar cf $FILE $* ;;
+			*.tar.bz2 ) shift && tar cjf $FILE $* ;;
+			*.tar.xz ) shift && tar cjf $FILE $* ;;
+			*.tar.gz ) shift && tar czf $FILE $* ;;
+			*.tgz ) shift && tar czf $FILE $* ;;
+			*.zip ) shift && zip -r $FILE $* ;;
+			*.rar ) shift && rar $FILE $* ;;
+		esac
+	else
+		echo "usage: compress <foo.tar.gz> ./foo ./bar"
+	fi
+}
+
+
+##################################
+# Miscellaneous
+###################################
+
+# list and grep with file permission
+lsg() {
+  keyword=$(echo "$@" |  sed 's/ /.*/g')
+  /usr/bin/ls -hlA --color=yes \
+  | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}' \
+  | grep -iE $keyword
+}
+
+pkg() {
+    flag=${1#-}
+    shift
+    case $flag in
+        a) sudo pacman -S "$@"  ;;
+        u) sudo pacman -Syyuu && yay -Syyuu ;;
+        d) sudo pacman -Rscn "$@" ;;
+        i) pacman -Qs "$@" ;;
+        s) pacman -Ss "$@" ;;
+        c) sudo pacman -Rns $(pacman -Qtdq) ;;
+    esac
+}
+
+# show file access permission
+# http://unix.stackexchange.com/a/46921
+file-permission() { stat --format '%a %A %n' "$@" ;}
+
+# URL shortener
+short(){ curl -s j2l.de/"$@" ;}
+
+# searches for manual online
+sman() {
+	less <<< $(lynx -dump -nolist https://www.mankier.com/?q=$1 | sed '/^\s\+[a-zA-Z0-9_+-]\+\sman page$/,$!d;/^\s\+\* Home$/,$ d')
+}
+
+# Download youtube songs in opus format
+ymp3() {
+	youtube-dl "$@" --add-metadata --metadata-from-title "%(artist)s - %(title)s" \
+	--extract-audio --prefer-ffmpeg --youtube-skip-dash-manifest --ignore-errors
+}
+
+# Create a new directory and enter it
+mkcd() {
+	mkdir -p "$@" && cd "$_"
+}
+
+how_in() {
+	where="$1"; shift
+	IFS=+ curl "https://cht.sh/$where/$*"
+}
+
+# Shows files in markdown format
+mdless(){
+	pandoc -s -f markdown -t man "$*" | groff -T utf8 -man | less ;
+}
+
+# display directories ranked by size (MB), descending order
+dum() {
+	du -h --max-depth=3 | grep ^[0-9.]*M | sort -rn | head -n 20
+}
+
+# Wget (Retrieve Files From The Web)
+# http://stackoverflow.com/a/18709707
+wget-extension() {
+  if [ $# -lt 2 ]; then
+    echo -e "Download all files with specific extension on a webpage"
+    echo -e "\nUsage: wget-extension <file_extension> <url>"
+    echo -e "\nExample:\nwget-extension mp4 http://example.com/files/"
+    echo -e "wget-extension mp3,ogg,wma http://samples.com/files/"
+    return 1
+  fi
+
+  # savepath=~/Downloads
+  # outputdir_name=$(echo "$2" | rev | cut -d\/ -f2 | rev)
+  # mkdir -pv "$savepath/$outputdir_name"
+  # cd "$savepath/$outputdir_name" && wget -r -l1 -H -t1 -nd -N -np -A "$1" -erobots=off "$2"
+
+  outputdir_name=$(echo "$2" | rev | cut -d\/ -f2 | rev)
+  mkdir -pv "$outputdir_name"
+  cd "$outputdir_name" && wget -r -l1 -H -t1 -nd -N -np -A "$1" -erobots=off "$2"
+}
+
+# Search for processes using grep
+psg()
+{
+	if [ $# -lt 1 ] || [ $# -gt 1 ]; then
+		echo "grep running processes"
+		echo "usage: psg [process]"
+	else
+		ps aux | grep USER | grep -v grep
+		ps aux | grep -i $1 | grep -v grep
+	fi
+}
+
+# Ref: https://github.com/paulmillr/dotfiles/blob/master/home/.zshrc.sh#L282
+# Show how much RAM application uses.
+# $ ram safari
+# # => safari uses 154.69 MBs of RAM.
+ram() {
+  local sum
+  local items
+  local app="$1"
+  if [ -z "$app" ]; then
+    echo "First argument - pattern to grep from processes"
+  else
+    sum=0
+    for i in `ps aux | grep -i "$app" | grep -v "grep" | awk '{print $6}'`; do
+      sum=$(($i + $sum))
+    done
+    sum=$(echo "scale=2; $sum / 1024.0" | bc)
+    if [[ $sum != "0" ]]; then
+      echo "${fg[blue]}${app}${reset_color} uses ${fg[green]}${sum}${reset_color} MBs of RAM."
+    else
+      echo "There are no processes with pattern '${fg[blue]}${app}${reset_color}' are running."
+    fi
+  fi
+}
+
+# Show the memory usage
+mem() {
+	total=$(free -m | awk 'NR==2 {print $2}')
+	used=$(free -m | awk 'NR==2 {print $3}')
+
+	printf "Memory Usage\n\nTotal: $total\nUsed: $used\n\n"
+}
+
+# Download videos from youtube on best quality available
+ytb() {
+	youtube-dl -f 313+251/271+251/137+251/136+251/135+251/134+251/133+251/137+171/136+171/135+171/134+171/133+171/137+250/136+250/135+250/134+250/133+250/137+140/136+140/135+140/134+140/133+140 $1
+}
+
+# Download random wallpapers from unsplash website
+unsplash() {
+	rm -rf /tmp/unsplash
+	mkdir /tmp/unsplash/
+	for i in $(seq 50); do
+		wget --quiet -O /tmp/unsplash/$i.jpg "https://unsplash.it/1920/1080/?random"
+	done
+}
+
+#################################
+# FZF
+#################################
+
+# cdfile - cd into a selected file directory
+cdfile() {
+   local file
+   local dir
+   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+}
+
+# Kill process by searching by the name
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]
+  then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+# fcoc - checkout git commit
+fcoc() {
+  local commits commit
+  commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
+  commit=$(echo "$commits" | fzf --tac +s +m -e) &&
+  git checkout $(echo "$commit" | sed "s/ .*//")
+}
+
+# vim:ft=sh

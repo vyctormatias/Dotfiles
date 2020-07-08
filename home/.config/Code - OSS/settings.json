@@ -1,0 +1,38 @@
+{
+    // Extensions
+    // Bracket Pair Colorizer 2, Code Runner, Polacode-2020,
+    // Material Icon Theme, Python, Dracula Official
+
+    // Define o tema do VSCode
+    "workbench.colorTheme":"Dracula",
+
+    // Configura tamanho e família da fonte
+    "editor.fontFamily": "'Fira Code', 'FontAwesome', 'Material Icons'",
+    "editor.fontSize": 15,
+    "editor.fontLigatures": true,
+    "editor.lineHeight":24,
+    "editor.fontWeight": "500",
+
+    // Aplica um sinal visual na esquerda da linha selecionada
+    "editor.renderLineHighlight":"gutter",
+
+    // Configura tamanho e a fonte do terminal
+    "terminal.integrated.fontFamily": "Menlo for Powerline",
+    "terminal.integrated.fontSize":14,
+
+    // Oculta a barra de menu
+    "window.menuBarVisibility": "toggle",
+
+    // Configuração python
+    "python.pythonPath": "/usr/bin/python3",
+    "python.venvPath": "/home/mhf/Documents/Programming/Python/",
+    // "python.linting.pylintPath": "/home/mhf/.local/bin/pylint",
+    // "code-runner.executorMap": {
+    //     "python": "python3 -u"
+        
+    // },
+    "code-runner.runInTerminal": true,
+    "code-runner.preserveFocus": false,
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+}

@@ -1,0 +1,37 @@
+! Colors
+#include ".themes/tomorrow"
+
+! General settings
+URxvt.font:                 xft:Iosevka Term:size=14:style=Regular
+URxvt.boldFont:             xft:Iosevka Term:size=14:style=Bold
+URxvt.italicFont:           xft:Iosevka Term:size=14:style=Italic
+URxvt*letterSpace:          0
+URxvt.scrollBar:            false
+URxvt*geometry:             80x21
+URxvt.internalBorder:       15
+URxvt*termName:             rxvt-256color
+URxvt*scrollTtyOutput:      false
+URxvt*scrollWithBuffer:     true
+URxvt*scrollTtyKeypress:    true
+URxvt.saveLines:            2000
+URxvt.url-select.launcher:  palemoon
+URxvt.url-select.underline: true
+URxvt.urlButton:            1
+URxvt.perl-ext-common:      selection-to-clipboard
+URxvt.colorUL:              #4682B4
+!urxvt*depth: 32
+!urxvt*background: [85]#000000
+
+! Navigations
+URxvt.keysym.M-u:           perl:url-select:select_next
+URxvt.keysym.M-s:           perl:keyboard-select:search
+URxvt.keysym.Shift-Up:      command:\033]720;1\007
+URxvt.keysym.Shift-Down:    command:\033]721;1\007
+
+! fonts
+Xft.embeddedbitmap:         false
+Xft.antialias:              true
+Xft.hinting:                true
+Xft.hintstyle:              hintslight
+Xft.lcdfilter:              lcddefault
+Xft.rgba:                   rgb

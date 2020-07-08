@@ -1,0 +1,52 @@
+! ------------------------------------------------------------------------------
+! ROFI Color theme
+! ------------------------------------------------------------------------------
+rofi.color-enabled: true
+rofi.color-window: #1d1f21, #dee3e0, #1d1f21
+rofi.color-normal: #252525, #c1c1c1, #252525, #394249, #ffffff
+rofi.color-active: #1d1f21, #80cbc4, #252525, #394249, #80cbc4
+rofi.color-urgent: #1d1f21, #ff1844, #252525, #394249, #ff1844
+
+! Number of lines
+rofi.lines: 10
+
+! Line padding
+rofi.line-padding: 10
+
+! Window width
+rofi.width: 50
+
+! Number of columns
+rofi.columns: 2
+
+! Font to use
+rofi.font: Iosevka Term 12
+
+! Hide scrollbar
+rofi.hide-scrollbar: true
+
+! Enabled modi
+rofi.display-drun: Applications :
+rofi.drun-display-format: {name}
+
+! Enable icons
+rofi.show-icons: true
+rodi.icon-theme: "Papirus" 
+
+! Border width
+rofi.bw: 3
+
+! Padding
+rofi.padding: 20
+
+! Run command to execute
+rofi.run-command: bash -c '{cmd}'
+
+! Set the matching algorithm. (normal, regex, glob, fuzzy)
+rofi.matching: normal
+
+! Indicate how it match by underlining it
+rofi.show-match: true
+
+! Disable history in run/ssh
+rofi.disable-history: true
